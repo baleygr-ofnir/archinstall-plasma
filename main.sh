@@ -79,11 +79,8 @@ perform_installation() {
 cleanup_and_finish() {
   sleep 5
   echo "Installation complete!"
-  echo "Installing ML4W Hyprland user configuration and rebooting."
-  arch-chroot /mnt sudo -u $USERNAME ml4w-hyprland-setup -m dotfiles -p arch
   cryptsetup open "$USRVOL_PART" usrvol <<< "$LUKS_PASSWORD"
   mount -t btrfs -o subvol=@home /dev/mapper/usrvol /mnt/home
-  echo "exec-once = kitty bash /home/${USERNAME}/post_install.sh" >> "/mnt/home/${USERNAME}/.config/hypr/hyprland.conf"
   umount -R /mnt
   systemctl reboot
 }
