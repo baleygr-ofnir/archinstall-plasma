@@ -158,4 +158,14 @@ fi
 
 sed -i -e "s|kitty bash ${HOME}/post_install.sh &||" ${HOME}/.zshrc
 
+gum confirm "Configure Swedish locale settings?" && for se_locale in \
+      "LC_NUMERIC=sv_SE.UTF-8" \
+      "LC_TIME=sv_SE.UTF-8" \
+      "LC_MONETARY=sv_SE.UTF-8" \
+      "LC_PAPER=sv_SE.UTF-8" \
+      "LC_MEASUREMENT=sv_SE.UTF-8"
+    do
+      echo "${se_locale}" | sudo tee -a /etc/locale.conf
+    done
+
 gum confirm "Reboot recommended, continue?" && systemctl reboot
