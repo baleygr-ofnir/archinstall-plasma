@@ -136,12 +136,12 @@ EOF
   
   # Copy systemd-boot files into system and configuring
   cp -r "${SCRIPT_DIR}/conf/boot" /mnt
-  chown -R 0:0 /mnt/boot/loader
+  arch-chroot /mnt chown -R 0:0 /boot/loader
   sed -i -e "s/SYSVOL_UUID_PLACEHOLDER/$(blkid -s UUID -o value $SYSVOL_PART)/" /mnt/boot/loader/entries/arch.conf
 
   # Copy system conf files into system and configuring
   cp -r "${SCRIPT_DIR}/conf/etc" /mnt
-  chown -R 0:0 /mnt/etc/{crypttab,mkinitcpio.conf,hosts,vconsole.conf}
+  arch-chroot /mnt chown -R 0:0 /mnt/etc/{crypttab,mkinitcpio.conf,hosts,vconsole.conf}
   sed -i -e "s/USRVOL_UUID_PLACEHOLDER/$(blkid -s UUID -o value $USRVOL_PART)/" /mnt/etc/crypttab
   sed -i -e "s/HOSTNAME_PLACEHOLDER/$HOSTNAME/g" \
     -e "s/LANDOMAIN_PLACEHOLDER/$LANDOMAIN/g" \
