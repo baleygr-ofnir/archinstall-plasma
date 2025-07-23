@@ -99,6 +99,7 @@ create_chroot_script() {
   # Install and configure systemd-boot
   echo "Installing systemd-boot..."
   bootctl install
+  efibootmgr --create --disk $DISK --part 1 --label "netboot.xyz" --loader /EFI/netboot.xyz/netboot.xyz.efi
   
   # Create swapfile
   echo "Creating 8GB swapfile..."
@@ -135,7 +136,6 @@ EOF
   
   # Copy systemd-boot files into system and configuring
   cp -r "${SCRIPT_DIR}/conf/boot" /mnt
-  efibootmgr --create --disk $DISK --part 1 --label "netboot.xyz" --loader /EFI/netboot.xyz/netboot.xyz.efi
   chown -R 0:0 /mnt/boot/loader
   sed -i -e "s/SYSVOL_UUID_PLACEHOLDER/$(blkid -s UUID -o value $SYSVOL_PART)/" /mnt/boot/loader/entries/arch.conf
 
