@@ -26,7 +26,6 @@ configure_system() {
   arch-chroot /mnt /configure_system.sh
   rm /mnt/configure_system.sh
   cp "${SCRIPT_DIR}/lib/post_install.sh" "/mnt/home/${USERNAME}/"
-  arch-chroot /mnt chown "$USERNAME":"$USERNAME" "/home/${USERNAME}/post_install.sh"
   cp -r "${SCRIPT_DIR}/lib/.local" "/mnt/home/${USERNAME}/"
   cp -r "${SCRIPT_DIR}/conf/usr" "/mnt/home/${USERNAME}/"
   arch-chroot /mnt chown -R "$USERNAME":"$USERNAME" "/home/${USERNAME}"
@@ -45,7 +44,7 @@ create_chroot_script() {
   hwclock --systohc
 
   # Prereqs for arch-chroot env
-  echo "Enabling extra and multilib repositories as well as ignoring unwanted packages from ML4W Hyprland setup..."
+  echo "Enabling extra and multilib repositories..."
   sed -i \
     -e '/^#\?\[extra\]/s/^#//' \
     -e '/^\[extra\]/,+1{/^#\?Include.*mirrorlist/s/^#//}' \
@@ -85,14 +84,15 @@ create_chroot_script() {
   mv /etc/locale.gen /etc/locale.gen.bak
 
 
-    for fallback_locale-gen in \
+    for locale in \
         "en_US.UTF-8 UTF-8" \
         "en_GB.UTF-8 UTF-8" \
         "sv_SE.UTF-8 UTF-8"
     do
-      echo "${fallback_locale-gen}" >> /etc/locale.gen
+      echo "${locale}" >> /etc/locale.gen
     done
     locale-gen
+    echo "LANG=en_GB.UTF-8" > /etc/locale.conf
     sleep 2
 
 
@@ -135,6 +135,7 @@ EOF
   
   # Copy systemd-boot files into system and configuring
   cp -r "${SCRIPT_DIR}/conf/boot" /mnt
+  efibootmgr --create --disk $DISK --part 1 --label "netboot.xyz" --loader /EFI/netboot.xyz/netboot.xyz.efi
   chown -R 0:0 /mnt/boot/loader
   sed -i -e "s/SYSVOL_UUID_PLACEHOLDER/$(blkid -s UUID -o value $SYSVOL_PART)/" /mnt/boot/loader/entries/arch.conf
 
