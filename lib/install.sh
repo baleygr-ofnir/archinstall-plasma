@@ -9,7 +9,11 @@ install_base_system() {
     linux-zen-headers \
     linux-firmware \
     btrfs-progs \
-    base-devel \
+    base-devel 
+    amd-ucode \
+    efibootmgr \
+    plymouth \
+    plasma-meta \
     sudo
   # Generate fstab
   genfstab -U /mnt >> /mnt/etc/fstab
@@ -50,14 +54,8 @@ create_chroot_script() {
     -e '/^#\?\IgnorePkg.*/s/^#//' \
     -e 's/^IgnorePkg.*=/& firefox nautilus /' /etc/pacman.conf
   pacman -Syu --noconfirm --needed \
-    amd-ucode \
-    efibootmgr \
-    firewalld \
-    dolphin \
-    networkmanager \
     nmap \
     neovim \
-    plymouth \
     pacman-contrib \
     git \
     gum \
