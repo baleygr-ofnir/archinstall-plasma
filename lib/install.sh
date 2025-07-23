@@ -9,7 +9,7 @@ install_base_system() {
     linux-zen-headers \
     linux-firmware \
     btrfs-progs \
-    base-devel 
+    base-devel \
     amd-ucode \
     efibootmgr \
     plymouth \
