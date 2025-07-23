@@ -7,7 +7,7 @@ INSTALL_DIR="/tmp/${NAME}"
 
 pacman -Sy --needed --noconfirm git
 
-if [ ! -d /tmp/archinstall ];then
+if [ ! -d "${INSDTALL_DIR}" ];then
     git clone "$SOURCE" "$INSTALL_DIR"
 else
     echo "Already downloaded in: $INSTALL_DIR, continuing..."
