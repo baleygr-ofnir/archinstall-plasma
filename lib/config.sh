@@ -20,7 +20,7 @@ setup_interactive_config() {
   echo "  Username: $USERNAME"
   echo "  Timezone: $TIMEZONE"
   echo "  Target disk: $DISK"
-  sleep 8
+  sleep 2
 }
 
 # Hostname input with validation
