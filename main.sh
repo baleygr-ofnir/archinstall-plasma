@@ -57,7 +57,7 @@ check_requirements() {
 
 confirm_installation() {
   echo "Installation Summary:"
-  echo "  Hostname: $HOSTNAME"
+  echo "  Hostname: $HOSTNAME.$LANDOMAIN.$DOMAINSUFFIX"
   echo "  Username: $USERNAME"
   echo "  Target disk: $DISK"
   echo "  EFI: ${EFI_SIZE}, System: ${SYSVOL_SIZE}, User: remaining (encrypted)"
@@ -77,10 +77,8 @@ perform_installation() {
 }
 
 cleanup_and_finish() {
-  sleep 5
-  echo "Installation complete!"
-  cryptsetup open "$USRVOL_PART" usrvol <<< "$LUKS_PASSWORD"
-  mount -t btrfs -o subvol=@home /dev/mapper/usrvol /mnt/home
+  sleep 2
+  echo "Installation complete! Rebooting ..."
   umount -R /mnt
   systemctl reboot
 }
