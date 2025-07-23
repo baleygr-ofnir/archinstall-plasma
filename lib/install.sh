@@ -49,7 +49,7 @@ create_chroot_script() {
     -e '/^#\?\[extra\]/s/^#//' \
     -e '/^\[extra\]/,+1{/^#\?Include.*mirrorlist/s/^#//}' \
     -e '/^#\?\[multilib\]/s/^#//' \
-    -e '/^\[multilib\]/,+1{/^#\?Include.*mirrorlist/s/^#//}' \
+    -e '/^\[multilib\]/,+1{/^#\?Include.*mirrorlist/s/^#//}'
   pacman -Syu --noconfirm --needed \
     nmap \
     neovim \
