@@ -14,3 +14,8 @@ bindkey "^[[1;5C" forward-word
 bindkey "^[[1;5D" backward-word
 
 PATH=$USER/.local/sh:$USER/.local/bin:$PATH
+
+# -----------------------------------------------------
+# Prompt theming, look for available here: https://ohmyposh.dev/docs/themes
+# -----------------------------------------------------
+eval $(oh-my-posh init zsh --config https://github.com/JanDeDobbeleer/oh-my-posh/blob/main/themes/velvet.omp.json)
