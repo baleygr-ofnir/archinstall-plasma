@@ -28,8 +28,8 @@ configure_system() {
   cp "${SCRIPT_DIR}/lib/post_install.sh" "/mnt/home/${USERNAME}/"
   arch-chroot /mnt chown "$USERNAME":"$USERNAME" "/home/${USERNAME}/post_install.sh"
   cp -r "${SCRIPT_DIR}/lib/.local" "/mnt/home/${USERNAME}/"
-  arch-chroot /mnt chown -R "$USERNAME":"$USERNAME" "/home/${USERNAME}/.local/"
-  echo "exec-once = kitty bash /home/${USERNAME}/post_install.sh" >> "/mnt/home/${USERNAME}/.config/hypr/conf"
+  cp -r "${SCRIPT_DIR}/conf/usr" "/mnt/home/${USERNAME}/"
+  arch-chroot /mnt chown -R "$USERNAME":"$USERNAME" "/home/${USERNAME}"
 }
 
 # Create configuration script for chroot environment
@@ -51,8 +51,6 @@ create_chroot_script() {
     -e '/^\[extra\]/,+1{/^#\?Include.*mirrorlist/s/^#//}' \
     -e '/^#\?\[multilib\]/s/^#//' \
     -e '/^\[multilib\]/,+1{/^#\?Include.*mirrorlist/s/^#//}' \
-    -e '/^#\?\IgnorePkg.*/s/^#//' \
-    -e 's/^IgnorePkg.*=/& firefox nautilus /' /etc/pacman.conf
   pacman -Syu --noconfirm --needed \
     nmap \
     neovim \
@@ -85,24 +83,8 @@ create_chroot_script() {
   # Set locale
   echo "Setting locale..."
   mv /etc/locale.gen /etc/locale.gen.bak
-  # sudo -u USERNAME_PLACEHOLDER paru -S --noconfirm en_se
-  git clone https://aur.archlinux.org/en_se.git /tmp/en_se
-  chown -R nobody /tmp/en_se
-  cd /tmp/en_se
-  sudo -u nobody makepkg -s
-  cd
-  if pacman -U --noconfirm "/tmp/en_se/en_se-"*.pkg.tar.zst; then
-    echo "Installed en_SE locale from AUR"
-    sleep 2
-    echo "Enabling it in system"
-    echo "en_US.UTF-8 UTF-8" >> /etc/locale.gen
-    echo "en_SE.UTF-8 UTF-8" >> /etc/locale.gen
-    locale-gen
-    sleep 2
-    echo "Configuring as system language"
-    echo "LANG=en_SE.UTF-8" > /etc/locale.conf
-  else
-    echo "Failed to build/install en_SE, using fallback configuration"
+
+
     for fallback_locale-gen in \
         "en_US.UTF-8 UTF-8" \
         "en_GB.UTF-8 UTF-8" \
@@ -112,19 +94,7 @@ create_chroot_script() {
     done
     locale-gen
     sleep 2
-    for fallback_locale-conf in \
-      "LANG=en_GB.UTF-8" \
-      "LC_NUMERIC=sv_SE.UTF-8" \
-      "LC_TIME=sv_SE.UTF-8" \
-      "LC_MONETARY=sv_SE.UTF-8" \
-      "LC_PAPER=sv_SE.UTF-8" \
-      "LC_MEASUREMENT=sv_SE.UTF-8"
-    do
-      echo "${fallback_locale-conf}" >> /etc/locale.conf
-    done
-  fi
-  cd
-  rm -rf /tmp/en_se
+
 
   # Install and configure systemd-boot
   echo "Installing systemd-boot..."
@@ -145,42 +115,10 @@ create_chroot_script() {
   cd
   pacman -U --noconfirm "/tmp/plymouth-theme-monoarch/"*.pkg.tar.zst
 
-  # Enable NetworkManager
-  systemctl enable NetworkManager
-  systemctl enable firewalld
-
   # Enable package cache cleanup
   echo "Enabling automatic package cache cleanup..."
   systemctl enable paccache.timer
-
-  # Bluetooth configuration
-  if gum confirm "Install bluetooth packages?"; then
-    pacman -S \
-      bluez \
-      bluez-libs \
-      bluez-utils \
-      bluetoothctl \
-      blueman
-    systemctl enable bluetooth
-  fi
-
-  # Paru install
-  echo "\n\n    ---Installing paru - rust-based AUR helper (User password required) ---\n\n"
-  git clone https://aur.archlinux.org/paru.git /tmp/paru
-  chown -R USERNAME_PLACEHOLDER /tmp/paru
-  cd /tmp/paru
-  sudo -u USERNAME_PLACEHOLDER makepkg -si --noconfirm
-  cd
-  sleep 2
-
-  echo "Installing ML4W Hyprland..."
-  cd
-  sudo -u USERNAME_PLACEHOLDER paru -S --noconfirm ml4w-hyprland
-  sleep 2
-  sudo -u USERNAME_PLACEHOLDER ml4w-hyprland-setup -m packages -p arch
-  pacman -Rsn --noconfirm firefox nautilus nautilus-python nautilus-open-any-terminal
-  pacman -S --noconfirm dolphin
-
+  
   # Cleanup
   echo "Cleaning up package cache..."
   sudo -u USERNAME_PLACEHOLDER paru -Scc --noconfirm
