@@ -117,4 +117,5 @@ mount_filesystems() {
 
   echo "Filesystem layout:"
   lsblk
+  sleep 2
 }
