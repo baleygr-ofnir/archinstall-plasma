@@ -79,7 +79,7 @@ perform_installation() {
 cleanup_and_finish() {
   sleep 2
   echo "Installation complete! Rebooting ..."
-  umount -R /mnt
+  cleanup
   systemctl reboot
 }
 
