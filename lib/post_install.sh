@@ -1,3 +1,11 @@
+  echo "\n\n    ---Installing paru - rust-based AUR helper (User password required) ---\n\n"
+  sudo mkdir -p /tmp/paru
+  sudo chown -R ${USER} /tmp/paru
+  git clone https://aur.archlinux.org/paru.git /tmp/paru
+  cd /tmp/paru
+  makepkg -si --noconfirm
+  cd
+
 # Install packages
 paru -Syu --needed --noconfirm \
     # audio system
@@ -28,14 +36,16 @@ paru -Syu --needed --noconfirm \
     zapzap \
     mpv \
     oh-my-zsh-git \
+    oh-my-posh-bin \
     p7zip \
+    p7zip-gui \
     rsync \
     zoxide \
     wget
 
 systemctl --user enable --now pipewire.service pipewire-pulse.service wireplumber.service
 
-gum confirm "Install OnlyOffice desktop editors?" && paru -S --noconfirm onlyoffice-bin
+gum confirm "Install OnlyOffice desktop editors? (Free open-source Microsoft Office clone)" && paru -S --noconfirm onlyoffice-bin
 
 gum confirm "Install development tools?" && paru -S --noconfirm \
     code \
@@ -118,9 +128,7 @@ gum confirm "Install packages for gaming?" && paru -S --noconfirm \
 
 if [ ! -d ${HOME}/.oh-my-zsh ]; then
     mkdir -p ${HOME}/.oh-my-zsh/custom
-fi
-
-cat<<'ZSH_EOF' > ${HOME}/.oh-my-zsh/custom/environment.zsh
+    cat<<'ZSH_EOF' > ${HOME}/.oh-my-zsh/custom/environment.zsh
 export TERM=xterm-256color
 
 autoload -U select-word-style
@@ -136,14 +144,18 @@ bindkey "^[[1;5D" backward-word
 
 PATH=$USER/.local/sh:$USER/.local/bin:$PATH
 ZSH_EOF
+fi
 
+
+if [ ! -d ${HOME}/.config/kitty ]; then
 cat<<'KITTY_EOF' > ${HOME}/.config/kitty/custom.conf
 term xterm-256color
 enable_audio_bell no
 map ctrl+delete no_op
 map ctrl+shift+delete send_text all \x1b[3;5~
 KITTY_EOF
+fi
 
-sed -i -e "s|exec-once = kitty bash ${HOME}/post_install.sh||" ${HOME}/.config/hypr/hyprland.conf
+sed -i -e "s|kitty bash ${HOME}/post_install.sh &||" ${HOME}/.zshrc
 
 gum confirm "Reboot recommended, continue?" && systemctl reboot
