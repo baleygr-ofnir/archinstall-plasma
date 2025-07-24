@@ -27,12 +27,14 @@ configure_system() {
   create_chroot_script
   arch-chroot /mnt /configure_system.sh
   rm /mnt/configure_system.sh
+  sleep 2
   cp "${SCRIPT_DIR}/lib/post_install.sh" "/mnt/home/${USERNAME}/post_install.sh"
   arch-chroot /mnt chown "$USERNAME":"$USERNAME" "/home/${USERNAME}/post_install.sh" && chmod +x "/home/${USERNAME}/post_install.sh"
   cp -r "${SCRIPT_DIR}/lib/.local" "/mnt/home/${USERNAME}/"
   arch-chroot /mnt chmod +x "/home/${USERNAME}/.local/bin/timeshift-wayland"
   cp -r "${SCRIPT_DIR}/conf/usr/.*" "/mnt/home/${USERNAME}/"
   arch-chroot /mnt chown -R "$USERNAME":"$USERNAME" "/home/${USERNAME}/.*"
+  sleep 2
 }
 
 # Create configuration script for chroot environment
