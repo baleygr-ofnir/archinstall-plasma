@@ -141,7 +141,7 @@ EOF
 
   # Copy system conf files into system and configuring
   cp -r "${SCRIPT_DIR}/conf/etc" /mnt
-  arch-chroot /mnt chown -R 0:0 /mnt/etc/{crypttab,mkinitcpio.conf,hosts,vconsole.conf}
+  arch-chroot /mnt chown -R 0:0 /etc/{crypttab,mkinitcpio.conf,hosts,vconsole.conf}
   sed -i -e "s/USRVOL_UUID_PLACEHOLDER/$(blkid -s UUID -o value $USRVOL_PART)/" /mnt/etc/crypttab
   sed -i -e "s/HOSTNAME_PLACEHOLDER/$HOSTNAME/g" \
     -e "s/LANDOMAIN_PLACEHOLDER/$LANDOMAIN/g" \
