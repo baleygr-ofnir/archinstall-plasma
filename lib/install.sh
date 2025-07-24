@@ -65,6 +65,22 @@ create_chroot_script() {
     -e '/^#\?\[multilib\]/s/^#//' \
     -e '/^\[multilib\]/,+1{/^#\?Include.*mirrorlist/s/^#//}' /etc/pacman.conf
   pacman -Syu --noconfirm --needed \
+    dolphin \
+    audiocd-kio \
+    baloo \
+    dolphin-plugins \
+    kio-admin \
+    kio-gdrive \
+    kompare \
+    ffmpegthumbs \
+    icoutils \
+    kdegraphic-thumbnailers \
+    kdesdk-thumbnailers \
+    kimageformats \
+    libappimage \
+    qt6-imageformats \
+    taglib \
+    kde
     nmap \
     neovim \
     pacman-contrib \
