@@ -1,6 +1,8 @@
 #!/bin/bash
 # lib/install.sh - Base system installation and configuration functions
 # Install base system
+SCRIPT_DIR=/tmp/archinstall-plasma
+
 install_base_system() {
   echo "Installing base system..."
   pacstrap /mnt base \
@@ -23,9 +25,9 @@ install_base_system() {
 # Configure the installed system
 configure_system() {
   echo "Configuring system..."
-  cp ${SCRIPT_DIR}/lib/post_install.sh /mnt/tmp
-  cp -r ${SCRIPT_DIR}/lib/.local /mnt/tmp
-  cp -r ${SCRIPT_DIR}/conf/usr /mnt/tmp
+  cp ${SCRIPT_DIR}/lib/post_install.sh /mnt/root
+  cp -r ${SCRIPT_DIR}/lib/.local /mnt/root
+  cp -r ${SCRIPT_DIR}/conf/usr/.* /mnt/root
   create_chroot_script
   arch-chroot /mnt /configure_system.sh
   rm /mnt/configure_system.sh
@@ -95,6 +97,13 @@ create_chroot_script() {
   # Sudo config
   sed -i -e '/^#\? %wheel.*) ALL.*/s/^# //' /etc/sudoers
   sleep 2
+  
+  # User config
+  cp /root/post_install.sh /home/USERNAME_PLACEHOLDER
+  cp -r /root/.* /home/USERNAME_PLACEHOLDER
+  chown -R 1000:1000 /home/USERNAME_PLACEHOLDER
+  chmod +x /home/USERNAME_PLACEHOLDER/post_install.sh
+  chmod +x /home/USERNAME_PLACEHOLDER/.local/bin/timeshift-wayland
 
   # Set locale
   echo "Setting locale..."
@@ -133,20 +142,11 @@ create_chroot_script() {
   # Enable package cache cleanup
   echo "Enabling automatic package cache cleanup..."
   systemctl enable firewalld.service NetworkManager.service paccache.timer sddm.service
-  
-  # User config
-  mv /tmp/post_install.sh /home/USERNAME_PLACEHOLDER/post_install.sh
-  cp -r /tmp/usr/.* /home/USERNAME_PLACEHOLDER
-  cp -r /tmp/.local /home/USERNAME_PLACEHOLDER
-  chown -R 1000:1000 /home/USERNAME_PLACEHOLDER
-  chmod +x /home/USERNAME_PLACEHOLDER/post_install.sh
-  chmod +x /home/USERNAME_PLACEHOLDER/.local/bin/timeshift-wayland
+
 
   # Cleanup
   echo "Cleaning up package cache..."
   pacman -Scc --noconfirm
-  rm -rf /tmp/usr
-  rm -rf /tmp/.local
 
   echo "Rebuilding initramfs and setting default Plymouth theme to monoarch"
   plymouth-set-default-theme -R monoarch
