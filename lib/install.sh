@@ -60,7 +60,7 @@ create_chroot_script() {
     kompare \
     ffmpegthumbs \
     icoutils \
-    kdegraphic-thumbnailers \
+    kdegraphics-thumbnailers \
     kdesdk-thumbnailers \
     kimageformats \
     libappimage \
