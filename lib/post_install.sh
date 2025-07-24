@@ -109,7 +109,7 @@ gum confirm "Install packages for gaming?" && paru -S --noconfirm \
     steam \
     lutris \
     heroic-games-launcher-bin \
-    wine \
+    wine-staging \
     winetricks \
     wine-mono \
     wine-gecko \
