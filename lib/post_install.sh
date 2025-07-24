@@ -1,4 +1,4 @@
-echo "\n\n    ---Installing paru - rust-based AUR helper (User password required) ---\n\n"
+echo "---Installing paru - rust-based AUR helper (User password required) ---"
 sudo mkdir -p /tmp/paru
 sudo chown -R ${USER} /tmp/paru
 git clone https://aur.archlinux.org/paru.git /tmp/paru
@@ -6,8 +6,8 @@ cd /tmp/paru
 makepkg -si --noconfirm
 cd
 sleep 2
-# Install packages
-paru -Syu --needed --noconfirm \
+echo "Installing system packages, tools and messaging apps. Agree to handle jack2 conflict for pipewire-jack package. (User password and several confirmations will be required)" 
+paru -Syu --needed \
     pipewire \
     pipewire-audio \
     pipewire-pulse \
