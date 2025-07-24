@@ -12,6 +12,8 @@ install_base_system() {
     base-devel \
     amd-ucode \
     efibootmgr \
+    firewalld \
+    networkmanager \
     plymouth \
     plasma-meta \
     sudo
@@ -56,6 +58,7 @@ create_chroot_script() {
     pacman-contrib \
     git \
     gum \
+    kitty \
     realtime-privileges \
     timeshift \
     tmux \
