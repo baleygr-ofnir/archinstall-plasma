@@ -1,6 +1,6 @@
 #!/bin/bash
 # lib/install.sh - Base system installation and configuration functions
-
+SCRIPT_DIR=/tmp/archinstall-plasma
 # Install base system
 install_base_system() {
   echo "Installing base system..."
@@ -28,13 +28,14 @@ configure_system() {
   arch-chroot /mnt /configure_system.sh
   rm /mnt/configure_system.sh
   sleep 2
-  cp "${SCRIPT_DIR}/lib/post_install.sh" "/mnt/home/${USERNAME}/post_install.sh"
-  arch-chroot /mnt chown "$USERNAME":"$USERNAME" "/home/${USERNAME}/post_install.sh" && chmod +x "/home/${USERNAME}/post_install.sh"
-  cp -r "${SCRIPT_DIR}/lib/.local" "/mnt/home/${USERNAME}/"
-  arch-chroot /mnt chmod +x "/home/${USERNAME}/.local/bin/timeshift-wayland"
-  cp -r "${SCRIPT_DIR}/conf/usr/.*" "/mnt/home/${USERNAME}/"
-  arch-chroot /mnt chown -R "$USERNAME":"$USERNAME" "/home/${USERNAME}/.*"
-  sleep 2
+  cp ${SCRIPT_DIR}/lib/post_install.sh /mnt/home/${USERNAME}/post_install.sh
+  arch-chroot /mnt chown $USERNAME:$USERNAME /home/${USERNAME}/post_install.sh && chmod +x /home/${USERNAME}/post_install.sh
+  cp -r ${SCRIPT_DIR}/lib/.local /mnt/home/${USERNAME}/
+  arch-chroot /mnt chmod +x /home/${USERNAME}/.local/bin/timeshift-wayland
+  cp -r ${SCRIPT_DIR}/conf/usr/.* /mnt/home/${USERNAME}/
+  arch-chroot /mnt chown -R $USERNAME:$USERNAME /home/${USERNAME}/.*
+  ls -lav /mnt/home/${USERNAME}
+  sleep 5
 }
 
 # Create configuration script for chroot environment
