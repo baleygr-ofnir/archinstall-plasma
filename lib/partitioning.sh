@@ -47,10 +47,9 @@ setup_partitions() {
 # Setup LUKS encryption for user volume
 setup_encryption() {
   echo "Setting up LUKS encryption for user volume..."
-
-  cryptsetup --batch-mode luksFormat "$USRVOL_PART" - <<< "$LUKS_PASSWORD"
+  cryptsetup luksFormat --batch-mode "$USRVOL_PART" <<< "$LUKS_PASSWORD"
   sleep 2
-  cryptsetup --batch-mode open "$USRVOL_PART" usrvol - <<< "$LUKS_PASSWORD"
+  cryptsetup open --batch-mode "$USRVOL_PART" usrvol <<< "$LUKS_PASSWORD"
   sleep 2
 }
 
