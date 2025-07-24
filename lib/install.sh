@@ -24,6 +24,8 @@ install_base_system() {
 # Configure the installed system
 configure_system() {
   echo "Configuring system..."
+  df -h 
+  sleep 10
   create_chroot_script
   arch-chroot /mnt /configure_system.sh
   rm /mnt/configure_system.sh
