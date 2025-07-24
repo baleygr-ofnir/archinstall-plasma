@@ -104,7 +104,8 @@ create_chroot_script() {
   chown -R 1000:1000 /home/USERNAME_PLACEHOLDER
   chmod +x /home/USERNAME_PLACEHOLDER/post_install.sh
   chmod +x /home/USERNAME_PLACEHOLDER/.local/bin/timeshift-wayland
-
+  sed -i -e 's/USERDIR/USERNAME_PLACEHOLDER/' /home/USERNAME_PLACEHOLDER/.config/autostart/kitty-post-install.desktop
+  
   # Set locale
   echo "Setting locale..."
   mv /etc/locale.gen /etc/locale.gen.bak
