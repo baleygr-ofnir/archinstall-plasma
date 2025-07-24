@@ -23,4 +23,3 @@ fi
 if [ -f ~/.zshrc_custom ]; then
     source ~/.zshrc_custom
 fi
-kitty bash ${HOME}/post_install.sh" &
