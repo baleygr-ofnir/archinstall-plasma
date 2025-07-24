@@ -62,6 +62,7 @@ create_chroot_script() {
     gum \
     kitty \
     realtime-privileges \
+    ttf-jetbrains-mono-nerd \
     timeshift \
     tmux \
     zsh \
