@@ -27,10 +27,12 @@ configure_system() {
   create_chroot_script
   arch-chroot /mnt /configure_system.sh
   rm /mnt/configure_system.sh
-  cp "${SCRIPT_DIR}/lib/post_install.sh" "/mnt/home/${USERNAME}/"
+  cp "${SCRIPT_DIR}/lib/post_install.sh" "/mnt/home/${USERNAME}/post_install.sh"
+  arch-chroot /mnt chown "$USERNAME":"$USERNAME" "/home/${USERNAME}/post_install.sh" && chmod +x "/home/${USERNAME}/post_install.sh"
   cp -r "${SCRIPT_DIR}/lib/.local" "/mnt/home/${USERNAME}/"
-  cp -r "${SCRIPT_DIR}/conf/usr" "/mnt/home/${USERNAME}/"
-  arch-chroot /mnt chown -R "$USERNAME":"$USERNAME" "/home/${USERNAME}"
+  arch-chroot /mnt chmod +x "/home/${USERNAME}/.local/bin/timeshift-wayland"
+  cp -r "${SCRIPT_DIR}/conf/usr/.*" "/mnt/home/${USERNAME}/"
+  arch-chroot /mnt chown -R "$USERNAME":"$USERNAME" "/home/${USERNAME}/.*"
 }
 
 # Create configuration script for chroot environment
@@ -85,19 +87,16 @@ create_chroot_script() {
   # Set locale
   echo "Setting locale..."
   mv /etc/locale.gen /etc/locale.gen.bak
-
-
-    for locale in \
-        "en_US.UTF-8 UTF-8" \
-        "en_GB.UTF-8 UTF-8" \
-        "sv_SE.UTF-8 UTF-8"
-    do
-      echo "${locale}" >> /etc/locale.gen
-    done
-    locale-gen
-    echo "LANG=en_GB.UTF-8" > /etc/locale.conf
-    sleep 2
-
+  for locale in \
+      "en_US.UTF-8 UTF-8" \
+      "en_GB.UTF-8 UTF-8" \
+      "sv_SE.UTF-8 UTF-8"
+  do
+    echo "${locale}" >> /etc/locale.gen
+  done
+  locale-gen
+  echo "LANG=en_GB.UTF-8" > /etc/locale.conf
+  sleep 2
 
   # Install and configure systemd-boot
   echo "Installing systemd-boot..."
@@ -121,7 +120,7 @@ create_chroot_script() {
 
   # Enable package cache cleanup
   echo "Enabling automatic package cache cleanup..."
-  systemctl enable paccache.timer
+  systemctl enable firewalld.service NetworkManager.service paccache.timer
   
   # Cleanup
   echo "Cleaning up package cache..."
