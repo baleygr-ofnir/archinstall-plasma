@@ -29,7 +29,6 @@ paru -Syu --needed --noconfirm \
     ttf-liberation-mono-nerd \
     ttf-jetbrains-mono-nerd \
     ttf-ms-win11-auto \
-    flatpak \
     vivaldi-snapshot \
     signal-desktop \
     vesktop \

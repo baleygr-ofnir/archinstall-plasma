@@ -68,6 +68,7 @@ create_chroot_script() {
     libappimage \
     qt6-imageformats \
     taglib \
+    flatpak \
     nmap \
     neovim \
     pacman-contrib \
