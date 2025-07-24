@@ -156,7 +156,7 @@ map ctrl+shift+delete send_text all \x1b[3;5~
 KITTY_EOF
 fi
 
-sed -i -e "s|kitty bash ${HOME}/post_install.sh &||" ${HOME}/.zshrc
+sed -i -e "s|kitty bash ${HOME}/post_install.sh &||" ${HOME}/.zlogin
 
 gum confirm "Configure Swedish locale settings?" && for se_locale in \
       "LC_NUMERIC=sv_SE.UTF-8" \
