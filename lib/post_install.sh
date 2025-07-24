@@ -1,14 +1,13 @@
-  echo "\n\n    ---Installing paru - rust-based AUR helper (User password required) ---\n\n"
-  sudo mkdir -p /tmp/paru
-  sudo chown -R ${USER} /tmp/paru
-  git clone https://aur.archlinux.org/paru.git /tmp/paru
-  cd /tmp/paru
-  makepkg -si --noconfirm
-  cd
-
+echo "\n\n    ---Installing paru - rust-based AUR helper (User password required) ---\n\n"
+sudo mkdir -p /tmp/paru
+sudo chown -R ${USER} /tmp/paru
+git clone https://aur.archlinux.org/paru.git /tmp/paru
+cd /tmp/paru
+makepkg -si --noconfirm
+cd
+sleep 2
 # Install packages
 paru -Syu --needed --noconfirm \
-    # audio system
     pipewire \
     pipewire-audio \
     pipewire-pulse \
@@ -30,8 +29,9 @@ paru -Syu --needed --noconfirm \
     ttf-jetbrains-mono-nerd \
     ttf-ms-win11-auto \
     vivaldi-snapshot \
+    vivaldi-snapshot-ffmpeg-codecs \
     signal-desktop \
-    vesktop \
+    vesktop-bin \
     zapzap \
     mpv \
     oh-my-zsh-git \
