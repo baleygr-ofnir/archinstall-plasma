@@ -30,6 +30,8 @@ configure_system() {
   cryptsetup open --batch-mode ${USRVOL_PART} usrvol <<< "$LUKS_PASSWORD"
   sleep 5
   mount -t btrfs -o subvol=@home,"$BTRFS_OPTS" /mnt/home
+  echo ${SCRIPT_DIR}
+  ls ${SCRIPT_DIR}/lib
   df -h
   ls -lav /mnt/home
   sleep 20
