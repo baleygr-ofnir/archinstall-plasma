@@ -23,12 +23,16 @@ install_base_system() {
 # Configure the installed system
 configure_system() {
   echo "Configuring system..."
-  df -h 
-  sleep 10
   create_chroot_script
   arch-chroot /mnt /configure_system.sh
   rm /mnt/configure_system.sh
   sleep 2
+  cryptsetup open --batch-mode ${USRVOL_PART} usrvol <<< "$LUKS_PASSWORD"
+  sleep 5
+  mount -t btrfs -o subvol=@home,"$BTRFS_OPTS" /mnt/home
+  df -h
+  ls -lav /mnt/home
+  sleep 20
   cp ${SCRIPT_DIR}/lib/post_install.sh /mnt/home/${USERNAME}/post_install.sh
   arch-chroot /mnt chown $USERNAME:$USERNAME /home/${USERNAME}/post_install.sh && chmod +x /home/${USERNAME}/post_install.sh
   cp -r ${SCRIPT_DIR}/lib/.local /mnt/home/${USERNAME}/
