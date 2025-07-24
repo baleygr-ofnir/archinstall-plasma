@@ -23,26 +23,12 @@ install_base_system() {
 # Configure the installed system
 configure_system() {
   echo "Configuring system..."
+  cp ${SCRIPT_DIR}/lib/post_install.sh /mnt/tmp
+  cp -r ${SCRIPT_DIR}/lib/.local /mnt/tmp
+  cp -r ${SCRIPT_DIR}/conf/usr /mnt/tmp
   create_chroot_script
   arch-chroot /mnt /configure_system.sh
   rm /mnt/configure_system.sh
-  sleep 2
-  cryptsetup open --batch-mode ${USRVOL_PART} usrvol <<< "$LUKS_PASSWORD"
-  sleep 5
-  mount -t btrfs -o subvol=@home,"$BTRFS_OPTS" /mnt/home
-  echo ${SCRIPT_DIR}
-  ls ${SCRIPT_DIR}/lib
-  df -h
-  ls -lav /mnt/home
-  sleep 20
-  cp ${SCRIPT_DIR}/lib/post_install.sh /mnt/home/${USERNAME}/post_install.sh
-  arch-chroot /mnt chown $USERNAME:$USERNAME /home/${USERNAME}/post_install.sh && chmod +x /home/${USERNAME}/post_install.sh
-  cp -r ${SCRIPT_DIR}/lib/.local /mnt/home/${USERNAME}/
-  arch-chroot /mnt chmod +x /home/${USERNAME}/.local/bin/timeshift-wayland
-  cp -r ${SCRIPT_DIR}/conf/usr/.* /mnt/home/${USERNAME}/
-  arch-chroot /mnt chown -R $USERNAME:$USERNAME /home/${USERNAME}/.*
-  ls -lav /mnt/home/${USERNAME}
-  sleep 5
 }
 
 # Create configuration script for chroot environment
@@ -149,9 +135,20 @@ create_chroot_script() {
   echo "Enabling automatic package cache cleanup..."
   systemctl enable firewalld.service NetworkManager.service paccache.timer sddm.service
   
+  # User config
+  mv /tmp/post_install.sh /home/USERNAME_PLACEHOLDER/post_install.sh
+  cp -r /tmp/usr/.* /home/USERNAME_PLACEHOLDER
+  cp -r /tmp/.local /home/USERNAME_PLACEHOLDER
+  chown -R 1000:1000 /home/USERNAME_PLACEHOLDER
+  chmod +x /home/USERNAME_PLACEHOLDER/post_install.sh
+  chmod +x /home/USERNAME_PLACEHOLDER/.local/bin/timeshift-wayland
+
   # Cleanup
   echo "Cleaning up package cache..."
   pacman -Scc --noconfirm
+  rm -rf /tmp/usr
+  rm -rf /tmp/.local
+
   echo "Rebuilding initramfs and setting default Plymouth theme to monoarch"
   plymouth-set-default-theme -R monoarch
 EOF

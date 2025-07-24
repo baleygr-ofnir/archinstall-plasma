@@ -1,1 +1,1 @@
-kitty bash ${HOME}/post_install.sh" &
+kitty bash ${HOME}/post_install.sh &
