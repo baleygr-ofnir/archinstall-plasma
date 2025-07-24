@@ -122,8 +122,8 @@ create_chroot_script() {
   
   # Cleanup
   echo "Cleaning up package cache..."
-  sudo -u USERNAME_PLACEHOLDER paru -Scc --noconfirm
-  # Rebuild initramfs
+  pacman -Scc --noconfirm
+  echo "Rebuilding initramfs and setting default Plymouth theme to monoarch"
   plymouth-set-default-theme -R monoarch
 EOF
   
