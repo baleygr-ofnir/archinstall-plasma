@@ -131,7 +131,7 @@ create_chroot_script() {
 
   # Enable package cache cleanup
   echo "Enabling automatic package cache cleanup..."
-  systemctl enable firewalld.service NetworkManager.service paccache.timer
+  systemctl enable firewalld.service NetworkManager.service paccache.timer sddm.service
   
   # Cleanup
   echo "Cleaning up package cache..."
